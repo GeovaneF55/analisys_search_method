@@ -10,12 +10,11 @@ class eight_puzzle:
     # Método de distância Manhattan: Utiliza a distância do incremento com o
     #       valor atual do tabuleiro para o cálculo da distância
     def manhattan(self):
-        inc = 0
         h = 0
         for i in range(3):
             for j in range(3):
-                h += abs(inc - self.tabuleiro[i][j])
-            inc += 1
+                x, y = divmod(self.tabuleiro[i][j], 3)
+                h += abs(x-i) + abs(y-j)
         return h
 
     # Método Objetivo: Verifica se o valor atual do tabuleiro é igual ao valor
