@@ -61,12 +61,11 @@ def movimentos(atual):
     return estados
 
 # Método Largura: Aplica o método de busca Largura
-def largura(inicial):
+def largura(inicial, limite):
     fila, visitados = [inicial], []
 
-    while fila:
+    while fila and len(fila) < limite:
         atual = fila.pop(0)
-        print(len(visitados))
         if atual.objetivo():
             return atual
 
@@ -76,17 +75,22 @@ def largura(inicial):
         visitados.append(atual)
         for proximo in movimentos(atual):
             if proximo not in visitados:
-                fila.append(proximo)            
+                fila.append(proximo)
+    return None           
 
 # Método Gulosa: Aplica o método de busca Gulosa
 def gulosa(inicial):
     filaArvore = []
     filaArvore.append(inicial)
 
+    return None
+
 # Método A estrela: Aplica o método de busca A estrela
 def a_estrela(inicial):
     filaArvore = []
     filaArvore.append(inicial)
+
+    return None
 
 # Método imprime tabuleiro
 def imprime_tabuleiro(tabuleiro):
@@ -94,14 +98,41 @@ def imprime_tabuleiro(tabuleiro):
         print(row)
     print('\n')
 
+def resultado(resultado):
+    if(not resultado):
+        print ("Resultado: Sem solução em tempo hábil")
+    else:
+        t = resultado.pai
+        qt_passos = 0
+        print('resultado: ')
+        imprime_tabuleiro(resultado.tabuleiro)
+        while t:
+            qt_passos += 1
+            print('passo: ', qt_passos)
+            imprime_tabuleiro(t.tabuleiro)
+            t = t.pai
+        print ("Quantidade de Passos: " + str(qt_passos))
+
 if __name__ == "__main__":
     final = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-    teste = [[5, 2, 8], [4, 1, 7], [0, 3, 6]]
+
+    #teste = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    teste = [[1, 2, 0], [3, 4, 5], [6, 7, 8]]
     #teste = [[1, 4, 2], [3, 5, 8], [6, 0, 7]]
+    #teste = [[2, 3, 6], [0, 1, 8], [4, 5, 7]]
+    #teste = [[5, 2, 8], [4, 1, 7], [0, 3, 6]]
 
     inicial = EightPuzzle(teste, final, None)
     
-    resultadoL = largura(inicial)
+    print("MÉTODO DE BUSCA EM LARGURA")
+    resultadoL = largura(inicial, 2500)
+    resultado(resultadoL)
+
+    print("\nMÉTODO DE BUSCA GULOSA")
     resultadoG = gulosa(inicial)
+    resultado(resultadoG)
+
+    print("\nMÉTODO DE BUSCA A-ESTRELA")
     resultadoA = a_estrela(inicial)
+    resultado(resultadoA)
 
