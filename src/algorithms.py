@@ -8,24 +8,30 @@ from puzzle import children
 def bfs(start, final):
     queue, visited = Queue(), []
     queue.put(start)
-    nmoves = 0
+
+    state = 0
+    path = [-1]
 
     while not queue.empty():
         current = queue.get()
-       
-        print(nmoves)
-
+         
         if current == final:
-            queue = Queue()
+            break
 
         if current in visited:
             continue
 
-        nmoves += 1
         visited.append(current)
-
-        for child in children(current):
+        for child in children(current):                
             if child not in visited:
+                path.append(state)
                 queue.put(child)
+
+        state += 1
+
+    nmoves = 0
+    while path[state] != -1:
+        nmoves += 1
+        state   = path[state]
 
     return nmoves
