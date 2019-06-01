@@ -9,7 +9,7 @@ def nmoves(queue, state):
 
     while queue[state]['path'] != -1:
         n += 1
-        state   = queue[state]['path']
+        state = queue[state]['path']
     return n
 
 # Manhattan Distance Method: Uses a distance from the increment with the
@@ -29,13 +29,16 @@ def manhattan(state, final):
 def bfs(start, final):
     queue, path, visited = [], [], []
 
-    elem = {'state': start, 'path': -1}
+    state = 0
+    foundsolution = False
+
+    elem = {
+        'state': start,
+        'path': -1
+    }
 
     queue.append(elem)
     path.append(elem)
-
-    state = 0
-    foundsolution = False
 
     while queue:
         current = queue.pop(0)
@@ -50,7 +53,10 @@ def bfs(start, final):
         visited.append(current['state'])
         for child in children(current['state']):                
             if child not in visited:
-                elem = {'state': child, 'path': state}
+                elem = {
+                    'state': child,
+                    'path': state
+                }
                 queue.append(elem)
                 path.append(elem)
 
@@ -65,13 +71,17 @@ def bfs(start, final):
 def greedy(start, final):
     queue, path, visited = [], [], []
 
-    elem = {'state': start, 'path': -1, 'h': manhattan(start, final)}
+    state = 0
+    foundsolution = False
+
+    elem = {
+        'state': start,
+        'path': -1,
+        'h': manhattan(start, final)
+    }
 
     queue.append(elem)
     path.append(elem)
-
-    state = 0
-    foundsolution = False
 
     while queue:
         current = queue.pop(0)
@@ -86,7 +96,11 @@ def greedy(start, final):
         visited.append(current['state'])
         for child in children(current['state']):                
             if child not in visited:
-                elem = {'state': child, 'path': state, 'h': manhattan(current['state'], final)}
+                elem = {
+                    'state': child,
+                    'path': state,
+                    'h': manhattan(child, final)
+                }
                 queue.append(elem)
                 path.append(elem)
 
@@ -102,13 +116,18 @@ def greedy(start, final):
 def astar(start, final):
     queue, path, visited = [], [], []
 
-    elem = {'state': start, 'path': -1, 'h': manhattan(start, final)}
+    state = 0
+    foundsolution = False
+
+    elem = {
+        'state': start,
+        'path': -1,
+        'g': 0,
+        'h+g': manhattan(start, final) + 0
+    }
 
     queue.append(elem)
     path.append(elem)
-
-    state = 0
-    foundsolution = False
 
     while queue:
         current = queue.pop(0)
@@ -123,11 +142,16 @@ def astar(start, final):
         visited.append(current['state'])
         for child in children(current['state']):                
             if child not in visited:
-                elem = {'state': child, 'path': state, 'h': manhattan(current['state'], final)}
+                elem = {
+                    'state': child,
+                    'path': state,
+                    'g': current['g'] + 1,
+                    'h+g': manhattan(child, final) + current['g'] + 1
+                }
                 queue.append(elem)
                 path.append(elem)
 
-        queue = sorted(queue, key=lambda k: k['h']) 
+        queue = sorted(queue, key=lambda k: k['h+g']) 
         state += 1
 
     return nmoves(path, state) if foundsolution else -1
