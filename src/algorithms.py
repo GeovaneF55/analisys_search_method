@@ -5,12 +5,15 @@ from puzzle import children, get_pos
 # the index of the solution on the path.
 # Returns the number of moves made until reach final state.
 def nmoves(queue, state):
-    n = 0
+    n = 1
 
     while queue[state]['path'] != -1:
         n += 1
         state = queue[state]['path']
     return n
+
+def qt_visited(visited):
+    return len(visited)+1
 
 # Manhattan Distance Method: Uses a distance from the increment with the
 #   current value of the tray for calculating the distance
@@ -62,7 +65,10 @@ def bfs(start, final):
 
         state += 1
 
-    return nmoves(path, state) if foundsolution else -1
+    return (
+        nmoves(path, state) if foundsolution else -1,
+        qt_visited(visited)
+    )
 
 # Greedy search method algorithm
 # Start and final are list of lists. The first one represents the initial
@@ -107,7 +113,10 @@ def greedy(start, final):
         queue = sorted(queue, key=lambda k: k['h']) 
         state += 1
 
-    return nmoves(path, state) if foundsolution else -1
+    return (
+        nmoves(path, state) if foundsolution else -1,
+        qt_visited(visited)
+    )
 
 # A Star search method algorithm
 # Start and final are list of lists. The first one represents the initial
@@ -154,4 +163,7 @@ def astar(start, final):
         queue = sorted(queue, key=lambda k: k['h+g']) 
         state += 1
 
-    return nmoves(path, state) if foundsolution else -1
+    return (
+        nmoves(path, state) if foundsolution else -1,
+        qt_visited(visited)
+    )

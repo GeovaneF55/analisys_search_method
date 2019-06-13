@@ -1,4 +1,12 @@
 from algorithms import bfs, greedy, astar
+import time
+
+# Print Solution
+def print_solution(alg, height, visited, time):
+    print('\n{}'.format(alg))
+    print(' - Caminho Solução: {} vértices'.format(height))
+    print(' - Vértices percorridos: {} vértices'.format(visited))
+    print(' - Tempo de execução: {0:0.4f}'.format(time))
 
 # Print puzzle of the given board
 def print_puzzle(label, board):
@@ -10,13 +18,24 @@ def print_puzzle(label, board):
 # Resolve the test to the solution with BFS, Greedy and Astar methods
 def test(test, goal, label='Test'):
 
-    print('\n' + label)
+    print('\n##### ' + label + ' #####')
     print_puzzle('Objetivo:', goal)
     print_puzzle('Inicial:', test)
 
-    print('ALGORITMO GULOSO - Qtde passos: ', greedy(test, goal))
-    print('ALGORITMO A ESTRELA - Qtde passos: ', astar(test, goal))
-    print('ALGORITMO BFS - Qtde passos: ', bfs(test, goal))
+    start = time.time()
+    height, visited = greedy(test, goal)
+    end = time.time()
+    print_solution('ALGORITMO GULOSO', height, visited, end-start)
+
+    start = time.time()
+    height, visited = astar(test, goal)
+    end = time.time()
+    print_solution('ALGORITMO A*', height, visited, end-start)
+    
+    start = time.time()
+    height, visited = bfs(test, goal)
+    end = time.time()
+    print_solution('ALGORITMO BFS', height, visited, end-start)
 
 # Main method
 if __name__ == '__main__':
