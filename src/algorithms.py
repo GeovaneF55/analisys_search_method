@@ -1,7 +1,7 @@
 from puzzle import children, get_pos
 
 def qt_visited(visited):
-    return len(visited)+1
+    return len(visited)
 
 # Manhattan Distance Method: Uses a distance from the increment with the
 #   current value of the tray for calculating the distance
@@ -26,7 +26,8 @@ def bfs(start, final):
 
     elem = {
         'state': start,
-        'path': -1
+        'path': -1,
+        'g': 0
     }
 
     queue.append(elem)
@@ -44,16 +45,18 @@ def bfs(start, final):
         visited.append(current['state'])
         for child in children(current['state']):                
             if child not in visited:
+                g = current['g'] + 1
                 elem = {
                     'state': child,
-                    'path': state
+                    'path': state,
+                    'g': g
                 }
                 queue.append(elem)
 
         state += 1
 
     return (
-        state if foundsolution else -1,
+        current['g'] if foundsolution else -1,
         qt_visited(visited)
     )
 
