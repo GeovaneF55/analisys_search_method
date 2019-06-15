@@ -45,4 +45,4 @@ if __name__ == '__main__':
     test([['1', '2', ' '], ['3', '4', '5'], ['6', '7', '8']], goal, 'TESTE - Bem Perto da Solução')
     test([['1', '4', '2'], ['3', '5', '8'], ['6', ' ', '7']], goal, 'TESTE - Perto da Solução')
     test([['5', '2', '8'], ['4', '1', '7'], [' ', '3', '6']], goal, 'TESTE - Embaralhado 1')
-    test([['2', '3', '6'], [' ', '1', '8'], ['4', '5', '7']], goal, 'TESTE - Embaralhado 2')
+    #test([['2', '3', '6'], [' ', '1', '8'], ['4', '5', '7']], goal, 'TESTE - Embaralhado 2')

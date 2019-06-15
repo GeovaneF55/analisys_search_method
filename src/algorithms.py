@@ -1,17 +1,5 @@
 from puzzle import children, get_pos
 
-# Queue is a list and state is an integer. The queue is used
-# to get the fathers of the current element; the state is 
-# the index of the solution on the path.
-# Returns the number of moves made until reach final state.
-def nmoves(queue, state):
-    n = 1
-
-    while queue[state]['path'] != -1:
-        n += 1
-        state = queue[state]['path']
-    return n
-
 def qt_visited(visited):
     return len(visited)+1
 
@@ -22,7 +10,8 @@ def manhattan(state, final):
     for i, row in enumerate(state):
         for j, elem in enumerate(row):
             x, y = get_pos(final, elem)
-            h += abs(x - i) + abs(y - j)
+            if state[i][j] != final[i][j] and state[i][j] != ' ':
+                h += abs(x - i) + abs(y - j)
     return h
 
 # Breadth First Search (BFS) search method algorithm
@@ -30,7 +19,7 @@ def manhattan(state, final):
 # state; the last one, the final state.
 # Returns the number of moves made until reach final state.
 def bfs(start, final):
-    queue, path, visited = [], [], []
+    queue, visited = [], []
 
     state = 0
     foundsolution = False
@@ -41,9 +30,8 @@ def bfs(start, final):
     }
 
     queue.append(elem)
-    path.append(elem)
 
-    while queue:
+    while queue and not foundsolution:
         current = queue.pop(0)
          
         if current['state'] == final:
@@ -61,12 +49,11 @@ def bfs(start, final):
                     'path': state
                 }
                 queue.append(elem)
-                path.append(elem)
 
         state += 1
 
     return (
-        nmoves(path, state) if foundsolution else -1,
+        state if foundsolution else -1,
         qt_visited(visited)
     )
 
@@ -75,7 +62,7 @@ def bfs(start, final):
 # state; the last one, the final state.
 # Returns the number of moves made until reach final state.
 def greedy(start, final):
-    queue, path, visited = [], [], []
+    queue, visited = [], []
 
     state = 0
     foundsolution = False
@@ -83,13 +70,15 @@ def greedy(start, final):
     elem = {
         'state': start,
         'path': -1,
+        'g': 0,
         'h': manhattan(start, final)
     }
 
     queue.append(elem)
-    path.append(elem)
 
-    while queue:
+    current = []
+
+    while queue and not foundsolution:
         current = queue.pop(0)
          
         if current['state'] == final:
@@ -102,19 +91,21 @@ def greedy(start, final):
         visited.append(current['state'])
         for child in children(current['state']):                
             if child not in visited:
+                g = current['g'] + 1
+                h = manhattan(child, final)
                 elem = {
                     'state': child,
                     'path': state,
-                    'h': manhattan(child, final)
+                    'g': g,
+                    'h': h
                 }
                 queue.append(elem)
-                path.append(elem)
 
-        queue = sorted(queue, key=lambda k: k['h']) 
+        queue = sorted(queue, key=lambda k: k['h'])
         state += 1
 
     return (
-        nmoves(path, state) if foundsolution else -1,
+        current['g'] if foundsolution else -1,
         qt_visited(visited)
     )
 
@@ -123,7 +114,7 @@ def greedy(start, final):
 # state; the last one, the final state.
 # Returns the number of moves made until reach final state.
 def astar(start, final):
-    queue, path, visited = [], [], []
+    queue, visited = [], []
 
     state = 0
     foundsolution = False
@@ -136,9 +127,10 @@ def astar(start, final):
     }
 
     queue.append(elem)
-    path.append(elem)
 
-    while queue:
+    current = []
+
+    while queue and not foundsolution:
         current = queue.pop(0)
          
         if current['state'] == final:
@@ -151,19 +143,21 @@ def astar(start, final):
         visited.append(current['state'])
         for child in children(current['state']):                
             if child not in visited:
+                g = current['g'] + 1
+                h = manhattan(child, final)
                 elem = {
                     'state': child,
                     'path': state,
-                    'g': current['g'] + 1,
-                    'h+g': manhattan(child, final) + current['g'] + 1
+                    'g': g,
+                    'h': h,
+                    'h+g': h + g
                 }
                 queue.append(elem)
-                path.append(elem)
 
-        queue = sorted(queue, key=lambda k: k['h+g']) 
+        queue = sorted(queue, key=lambda k: k['h+g'])
         state += 1
 
     return (
-        nmoves(path, state) if foundsolution else -1,
+        current['g'] if foundsolution else -1,
         qt_visited(visited)
     )
